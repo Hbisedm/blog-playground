@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://blog.hbisedm.fun</id>
+    <title>hbisedm&apos;s Blog</title>
+    <updated>2024-12-28T03:25:12.631Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://blog.hbisedm.fun"/>
+    <link rel="self" href="https://blog.hbisedm.fun/atom.xml"/>
+    <subtitle>&lt;b&gt;知其然更知其所以然&lt;/b&gt;</subtitle>
+    <logo>https://blog.hbisedm.fun/images/avatar.png</logo>
+    <icon>https://blog.hbisedm.fun/favicon.ico</icon>
+    <rights>All rights reserved 2024, hbisedm&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[前端工具与插件]]></title>
+        <id>https://blog.hbisedm.fun/post/gong-ju-cha-jian/</id>
+        <link href="https://blog.hbisedm.fun/post/gong-ju-cha-jian/">
+        </link>
+        <updated>2024-12-28T02:54:09.000Z</updated>
+        <content type="html"><![CDATA[<p>持续更新ing</p>
+<h2 id="字体">字体</h2>
+<p>FiraCode Nerd Font Propo （图标很多）</p>
+<h2 id="渐变神器">渐变神器</h2>
+<p>Gradient https://gradient.shapefactory.co/</p>
+<h2 id="阴影工具在线网站">阴影工具在线网站</h2>
+<p>https://lingdaima.com/shadow/</p>
+<h2 id="box-shadow阴影网站">box-shadow阴影网站</h2>
+<p>https://box-shadow.art/</p>
+<h2 id="网站ui配色宝藏网站ui">网站UI配色宝藏网站UI</h2>
+<p>Design Daily https://www.uidesigndaily.com/</p>
+<h2 id="small-dev-tools实用工具合集">Small Dev tools实用工具合集</h2>
+<p>https://smalldev.tools/</p>
+<h2 id="glass-morphism-在线制作-css-玻璃风格神器">Glass Morphism 在线制作 CSS 玻璃风格神器</h2>
+<p>https://glassgenerator.netlify.app/</p>
+<h2 id="keyframes-在线动画-阴影和颜色">Keyframes 在线动画、阴影和颜色</h2>
+<p>https://keyframes.app/</p>
+<h2 id="bgjar-在线svg-背景">BGJar 在线SVG 背景</h2>
+<p>https://bgjar.com/</p>
+<h2 id="在线图片压缩">在线图片压缩</h2>
+<ul>
+<li>https://www.onlineimagetool.com/zh/</li>
+<li>https://tinypng.com/</li>
+</ul>
+<h2 id="markdown-在线编辑">Markdown 在线编辑</h2>
+<p>https://editor.runjs.cool</p>
+<h2 id="免费图床">免费图床</h2>
+<ul>
+<li>https://img.4837.cloud/</li>
+<li>https://imgse.com/</li>
+<li>https://www.superbed.cn/</li>
+</ul>
+<h2 id="在线简历编辑">在线简历编辑</h2>
+<p>https://www.polebrief.com</p>
+<h2 id="在线练习打字">在线练习打字</h2>
+<ul>
+<li>https://www.ldou.com</li>
+<li>https://dazidazi.com/</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Cursor无限使用体验]]></title>
+        <id>https://blog.hbisedm.fun/post/cursor-wu-xian-shi-yong-ti-yan/</id>
+        <link href="https://blog.hbisedm.fun/post/cursor-wu-xian-shi-yong-ti-yan/">
+        </link>
+        <updated>2024-12-25T10:26:42.000Z</updated>
+        <content type="html"><![CDATA[<p>使用2925邮箱</p>
+<blockquote>
+<p><code>123456@2925.com</code> ，<code>123456+1@2925.com</code> 对于cursor注册时，是不同的邮箱， 但是收验证码时，是同一个邮箱<code>123456@2925.com</code>在接收</p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每天划水必逛论坛]]></title>
+        <id>https://blog.hbisedm.fun/post/mei-tian-hua-shui-bi-guang-lun-tan/</id>
+        <link href="https://blog.hbisedm.fun/post/mei-tian-hua-shui-bi-guang-lun-tan/">
+        </link>
+        <updated>2024-12-14T07:09:36.000Z</updated>
+        <content type="html"><![CDATA[<ul>
+<li><a href="https://www.v2ex.com/">V2ex</a></li>
+<li><a href="https://linux.do/">LinuxDo</a></li>
+</ul>
+]]></content>
+    </entry>
+</feed>
