@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://blog.hbisedm.fun</id>
+    <title>hbisedm&apos;s Blog</title>
+    <updated>2025-02-20T03:28:35.243Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://blog.hbisedm.fun"/>
+    <link rel="self" href="https://blog.hbisedm.fun/atom.xml"/>
+    <subtitle>&lt;b&gt;知其然更知其所以然&lt;/b&gt;</subtitle>
+    <logo>https://blog.hbisedm.fun/images/avatar.png</logo>
+    <icon>https://blog.hbisedm.fun/favicon.ico</icon>
+    <rights>All rights reserved 2025, hbisedm&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[微信小程序上传腾讯云COS]]></title>
+        <id>https://blog.hbisedm.fun/post/wei-xin-xiao-cheng-xu-shang-chuan-teng-xun-yun-cos/</id>
+        <link href="https://blog.hbisedm.fun/post/wei-xin-xiao-cheng-xu-shang-chuan-teng-xun-yun-cos/">
+        </link>
+        <updated>2025-01-15T11:15:24.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="操作">操作</h2>
+<pre><code class="language-bash">pnpm i cos-wx-sdk-v5
+</code></pre>
+<p>封装代码</p>
+<pre><code class="language-ts">import { cosSts } from '@/service/common'
+import COS from 'cos-wx-sdk-v5'
+
+export default function useUpload2&lt;T = string&gt;(formData: Record&lt;string, any&gt; = {}) {
+  const loading = ref(false)
+  const error = ref(false)
+  const data = ref&lt;T&gt;()
+  const run = () =&gt; {
+    // #ifdef MP-WEIXIN
+    // 微信小程序从基础库 2.21.0 开始， wx.chooseImage 停止维护，请使用 uni.chooseMedia 代替。
+    // 微信小程序在2023年10月17日之后，使用本API需要配置隐私协议
+    uni.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      success: (res) =&gt; {
+        loading.value = true
+        const file = res.tempFiles[0]
+        uploadFile&lt;T&gt;({ file, formData, data, error, loading })
+      },
+      fail: (err) =&gt; {
+        error.value = true
+      },
+    })
+    // #endif
+    // #ifndef MP-WEIXIN
+    uni.chooseImage({
+      count: 1,
+      success: (res) =&gt; {
+        loading.value = true
+        const file = res.tempFilePaths[0]
+        uploadFile&lt;T&gt;({ file, formData, data, error, loading })
+      },
+      fail: (err) =&gt; {
+        error.value = true
+      },
+    })
+    // #endif
+  }
+
+  return { loading, error, data, run }
+}
+
+function uploadFile&lt;T&gt;({ file, formData, data, error, loading }) {
+// cosSts 服务端接口需要返回：上传的存储桶、地域、随机路径的对象键、临时密钥 等
+  cosSts().then((res) =&gt; {
+    const {
+      bucketName,
+      regionName,
+      startTime,
+      expiredTime,
+      tmpSecretId,
+      tmpSecretKey,
+      sessionToken,
+    } = res.data
+    const cos = new COS({
+      SecretId: tmpSecretId,
+      SecretKey: tmpSecretKey,
+      SecurityToken: sessionToken,
+      StartTime: startTime,
+      ExpiredTime: expiredTime,
+      SimpleUploadMethod: 'putObject',
+    })
+
+    cos
+      .uploadFile({
+        Bucket: bucketName,
+        Region: regionName,
+        Key: Date.now() + '.jpg',
+        FilePath: file.tempFilePath,
+        FileSize: file.size,
+      })
+      .then((res) =&gt; {
+        data.value = res.Location
+      })
+      .catch(() =&gt; {
+        error.value = true
+      })
+      .finally(() =&gt; {
+        loading.value = false
+      })
+  })
+}
+
+</code></pre>
+<h2 id="参考链接">参考链接</h2>
+<p><a href="https://cloud.tencent.com/document/product/436/109370">上传对象实践教程</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[node18在Centos7安装]]></title>
+        <id>https://blog.hbisedm.fun/post/node18-zai-centos7-an-zhuang/</id>
+        <link href="https://blog.hbisedm.fun/post/node18-zai-centos7-an-zhuang/">
+        </link>
+        <updated>2025-01-09T09:27:00.000Z</updated>
+        <content type="html"><![CDATA[<p>一开始不知道这个限制，捣鼓了很久，记录一下</p>
+<p>从nodejs18开始就不支持Centos7了，这是因为centos7的gilbc版本比较低，因此需要安装非官方构建的版本。</p>
+<p>三个方案来解决这个问题：</p>
+<ul>
+<li>从源代码安装 Node。这将允许您重新编译</li>
+<li>安装操作系统可支持的旧版本 Node</li>
+<li>将你的 Linux 操作系统升级到更新的版本。</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/74698021/installing-node-lib64-libm-so-6-version-glibc-2-27-not-found-required-by-n">Installing node: /lib64/libm.so.6: version `GLIBC_2.27' not found (required by node) error on linux</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Jenkins构建前端项目与部署]]></title>
+        <id>https://blog.hbisedm.fun/post/ji-lu/</id>
+        <link href="https://blog.hbisedm.fun/post/ji-lu/">
+        </link>
+        <updated>2024-12-28T03:04:24.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前提">前提</h2>
+<p>docker里面安装nginx/openresty服务器<br>
+里面挂载宿主机一个目录 用于 服务器资源文件的修改<br>
+docker里面安装jenkins</p>
+<blockquote>
+<p>本文是用<code>1panel</code>去操作容器， 当然用docker命令去操作也可，一个道理</p>
+</blockquote>
+<h2 id="安装">安装</h2>
+<p>创建jenkins目录</p>
+<pre><code class="language-bash">mkdir -p /home/jenkins
+</code></pre>
+<p>新增jenkins网络</p>
+<pre><code class="language-bash">    docker network create jenkins_net
+</code></pre>
+<p>使用docker-compose安装jenkins</p>
+<pre><code class="language-yml">services:
+  xxx_jenkins:
+    image: jenkins/jenkins
+    container_name: xxx_jenkins
+    user: root
+    networks:
+      - jenkins_net
+    ports:
+      - 8990:8080
+      - 50000:50000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/jenkins/jenkins_home:/var/jenkins_home
+networks:
+  jenkins_net:
+</code></pre>
+<blockquote>
+<p><code>volumes</code>: 挂载宿主机的目录或文件到容器中。在这个例子中，宿主机的 <code>/var/run/docker.sock</code> 文件被挂载到容器的同一位置，宿主机的 <code>/home/jenkins/jenkins_home</code> 目录被挂载到容器的 <code>/var/jenkins_home</code> 目录。</p>
+</blockquote>
+<p>使用 docker compose 启动 Jenkins</p>
+<pre><code class="language-bash">docker compose up -d
+</code></pre>
+<pre><code class="language-bash">[root@localhost jenkins]# docker ps -a
+CONTAINER ID   IMAGE                                 COMMAND                   CREATED        STATUS                      PORTS                                                                                                                                                                                                                    NAMES
+7f01e9c84eed   jenkins/jenkins                       &quot;/usr/bin/tini -- /u…&quot;   6 days ago     Up 46 hours                 0.0.0.0:50000-&gt;50000/tcp, :::50000-&gt;50000/tcp, 0.0.0.0:8990-&gt;8080/tcp, :::8990-&gt;8080/tcp                                                                                                                                 jhl_jenkins
+</code></pre>
+<h2 id="开始操作jenkins">开始操作jenkins</h2>
+<p>上面是我将宿主机的8990映射到容器内的8080，所以需要对端口为8990放行</p>
+<figure data-type="image" tabindex="1"><img src="https://img.4837.cloud/upload/202501/677642df9e91a4.22015476.png" alt="放行端口号" loading="lazy"></figure>
+<p>第一次进入需要获取密码</p>
+<pre><code class="language-bash">cat /var/jenkins_home/secrets/initialAdminPassword
+</code></pre>
+<ul>
+<li>登录后，选择<strong>自定义 Jenkins - 选择插件来安装</strong></li>
+<li>进去后 - 点击 无 - 滚动到底部 - **选择Localization: Chinese (Simplified) **- 安装</li>
+<li>只安装一个插件 Localization: Chinese (Simplified)</li>
+<li>其他按默认一直下一步就行</li>
+</ul>
+<h2 id="配置插件源">配置插件源</h2>
+<p>Dashboard -&gt; 系统管理 -&gt; 插件管理 -&gt; Advanced setting -&gt; 配置镜像源</p>
+<p>修改为：<code>https://updates.jenkins.io/update-center.json</code></p>
+<p>修改后，需要重启Jenkins</p>
+<figure data-type="image" tabindex="2"><img src="https://img.4837.cloud/upload/202501/67764543c3cba2.25768036.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://img.4837.cloud/upload/202501/6776456030a135.37985032.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>但是这样操作的话， 还是下载不了插件，设置全局配置加入网络代理</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://img.4837.cloud/upload/202501/677648fbb9cd28.44605933.png" alt="" loading="lazy"></figure>
+<h2 id="远程触发构建">远程触发构建</h2>
+<p>Jenkins 官网 - 跨站请求伪造保护：https://www.jenkins.io/doc/book/security/csrf-protection/</p>
+<p>Jenkins 远程触发 403 No valid crumb was included in the request https://www.jianshu.com/p/00fcfa4a53b5</p>
+<p>系统管理 - 脚本命令行</p>
+<p>输入下面脚本 - 点击运行</p>
+<pre><code class="language-yml">hudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION = true
+</code></pre>
+<p>勾选-匿名用户具有可读写权限</p>
+<figure data-type="image" tabindex="5"><img src="https://img.4837.cloud/upload/202501/67764a23ee2724.49527320.png" alt="" loading="lazy"></figure>
+<p>配置-触发远程构建</p>
+<figure data-type="image" tabindex="6"><img src="https://img.4837.cloud/upload/202501/67764a711ff6d5.12658035.png" alt="" loading="lazy"></figure>
+<p>比如我的就是 http://192.168.8.196:8990/job/factoryPc195/build?token=0b5d34cbe2a30ce849426ef395565373</p>
+<figure data-type="image" tabindex="7"><img src="https://img.4837.cloud/upload/202501/67764ae4395a82.14011199.png" alt="" loading="lazy"></figure>
+<h2 id="jenkins拉取远程代码-构建任务打包前端资源文件">Jenkins拉取远程代码-构建任务（打包前端资源文件）</h2>
+<p>那么需要安装git，node插件</p>
+<p>Git: https://plugins.jenkins.io/git/<br>
+nodejs: https://plugins.jenkins.io/nodejs/</p>
+<p>创建任务</p>
+<figure data-type="image" tabindex="8"><img src="https://img.4837.cloud/upload/202501/67764ba43ce979.22771216.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://img.4837.cloud/upload/202501/67764bceb5aed5.24378784.png" alt="" loading="lazy"></figure>
+<p>对于私有仓库需要个凭证才能拉取项目，填写对应信息</p>
+<figure data-type="image" tabindex="10"><img src="https://img.4837.cloud/upload/202501/67764c39d0a512.76787276.png" alt="" loading="lazy"></figure>
+<p>拉取前端项目后，需要运行<code>npm run build</code> 这就需要node环境</p>
+<p>配置node：</p>
+<figure data-type="image" tabindex="11"><img src="https://img.4837.cloud/upload/202501/67764cb6a1cd41.86598310.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://img.4837.cloud/upload/202501/67764cfae49547.85626104.png" alt="" loading="lazy"></figure>
+<p>Jenkins 任务 - 配置 Node.js 环境</p>
+<figure data-type="image" tabindex="13"><img src="https://img.4837.cloud/upload/202501/67764d6371f3a7.39210173.png" alt="" loading="lazy"></figure>
+<p>测试 nodejs 环境是否生效</p>
+<figure data-type="image" tabindex="14"><img src="https://img.4837.cloud/upload/202501/67764d9009ca94.83797284.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://img.4837.cloud/upload/202501/67764dad15f225.54556389.png" alt="" loading="lazy"></figure>
+<p>点击构建，查看控制台输出</p>
+<figure data-type="image" tabindex="16"><img src="https://img.4837.cloud/upload/202501/67764dd5b54516.75679666.png" alt="" loading="lazy"></figure>
+<p>拉取一个前端项目（vue、react都可）</p>
+<p>运行一个package.json里的script构建命令，假设为<code>build</code> ，会得到一个打包文件夹，假设为<code>dist</code></p>
+<pre><code class="language-bash">npm run build
+#  使用 tar 命令压缩 ./dist 目录
+tar zcvf dist.tar.gz ./dist
+</code></pre>
+<h2 id="将打包好的文件夹丢到远程服务器">将打包好的文件夹丢到远程服务器</h2>
+<p>思路：</p>
+<p>由于我的资源文件是放在当前容器的宿主机的nginx服务<br>
+那么我需要将这个容器和宿主机打通文件传输<br>
+使用ssh连接我的宿主机<br>
+接着使用scp将dist.tar.gz丢到宿主机的指定目录</p>
+<p><strong>公钥放在远程服务器，并命名为 authorized_keys， 私钥在jenkins服务器内。</strong></p>
+<pre><code class="language-bash">cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre>
+<p>这样jenkins服务器内输入 ssh 、scp 等链接远程服务器后，无需密码即可操作。</p>
+<p>操作：</p>
+<pre><code class="language-bash"># 进入jenkins
+docker exec -it &lt;jenkins容器id&gt; /bin/bash 
+
+# 在本地机器上生成密钥对
+ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;
+
+# 将公钥复制到服务器(宿主机)
+# 替换 username 为服务器的用户名，server_ip 为服务器的 IP 地址。
+# 系统会提示输入服务器的密码，公钥将自动添加到服务器的 ~/.ssh/authorized_keys 文件中。
+ssh-copy-id username@server_ip
+
+# 测试 SSH 密钥登录
+# 如果配置正确，应该无需输入密码即可登录（若设置了密码短语，则需输入短语）。
+ssh username@server_ip
+
+</code></pre>
+<p>jenkins 安装 ssh-agent 插件</p>
+<figure data-type="image" tabindex="17"><img src="https://img.4837.cloud/upload/202501/6776528e511a26.83169673.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://img.4837.cloud/upload/202501/67765313b3dba9.06465003.png" alt="" loading="lazy"></figure>
+<p>配置执行shell</p>
+<pre><code class="language-bash">node -v
+npm -v
+npm config set registry https://registry.npmmirror.com
+npm i
+
+npm run build
+
+ls
+tar zcvf dist.tar.gz ./pc-dist
+ls
+
+# 启动ssh-agent，这个代理会管理SSH私钥，用于无密码登录
+eval $(ssh-agent -s)
+
+
+scp dist.tar.gz root@192.168.8.196:/home/1panel/apps/openresty/openresty/www/sites/xxx
+
+ssh -v root@192.168.8.196 &quot;cd /home/1panel/apps/openresty/openresty/www/sites/xxx; rm -rf index; mkdir index; tar zxvf dist.tar.gz; mv ./pc-dist/* ./index/; rm -rf ./pc-dist; exit&quot;
+
+# 结束 ssh-agent 会话
+ssh-agent -k
+
+</code></pre>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://hostalk.net/posts/linux_sshkey.html">服务器配置SSH密钥登陆</a></li>
+<li><a href="https://cloud.tencent.com/developer/information/%E4%BD%BF%E7%94%A8cURL%E5%91%BD%E4%BB%A4%E8%A7%A6%E5%8F%91%E6%88%91%E7%9A%84Jenkins%E6%9E%84%E5%BB%BA%E4%BD%9C%E4%B8%9A">使用cURL命令触发我的Jenkins构建作业</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[工具、插件、网站]]></title>
+        <id>https://blog.hbisedm.fun/post/gong-ju-cha-jian/</id>
+        <link href="https://blog.hbisedm.fun/post/gong-ju-cha-jian/">
+        </link>
+        <updated>2024-12-28T02:54:09.000Z</updated>
+        <content type="html"><![CDATA[<p>持续更新ing</p>
+<h2 id="字体">字体</h2>
+<p><a href="https://www.nerdfonts.com/">FiraCode Nerd Font Propo</a></p>
+<h2 id="渐变神器">渐变神器</h2>
+<p><a href="https://gradient.shapefactory.co/">Gradient</a></p>
+<h2 id="阴影工具在线网站">阴影工具在线网站</h2>
+<p><a href="https://lingdaima.com/shadow/">https://lingdaima.com/shadow/</a></p>
+<h2 id="box-shadow阴影网站">box-shadow阴影网站</h2>
+<p><a href="https://box-shadow.art/">https://box-shadow.art/</a></p>
+<h2 id="网站ui配色宝藏网站ui">网站UI配色宝藏网站UI</h2>
+<p><a href="https://colorify.rocks/">AI 调色盘生成器</a><br>
+<a href="https://www.uidesigndaily.com/">Design Daily</a></p>
+<h2 id="small-dev-tools实用工具合集">Small Dev tools实用工具合集</h2>
+<p><a href="https://smalldev.tools/">https://smalldev.tools/</a></p>
+<h2 id="glass-morphism-在线制作-css-玻璃风格神器">Glass Morphism 在线制作 CSS 玻璃风格神器</h2>
+<p><a href="https://glassgenerator.netlify.app/">https://glassgenerator.netlify.app/</a></p>
+<h2 id="keyframes-在线动画-阴影和颜色">Keyframes 在线动画、阴影和颜色</h2>
+<p><a href="https://keyframes.app/">https://keyframes.app/</a><br>
+<a href="https://animxyz.com/">https://animxyz.com/</a></p>
+<h2 id="bgjar-在线svg-背景">BGJar 在线SVG 背景</h2>
+<p><a href="https://bgjar.com/">https://bgjar.com/</a></p>
+<h2 id="在线图片压缩">在线图片压缩</h2>
+<ul>
+<li><a href="https://www.onlineimagetool.com/zh/">https://www.onlineimagetool.com/zh/ </a></li>
+<li><a href="https://tinypng.com/">https://tinypng.com/</a></li>
+</ul>
+<h2 id="markdown-在线编辑">Markdown 在线编辑</h2>
+<p><a href="https://editor.runjs.cool">https://editor.runjs.cool</a></p>
+<h2 id="免费的-png-图片搜索好像只支持英文">免费的 PNG 图片搜索，好像只支持英文</h2>
+<p><a href="https://freepngzone.com/index.html">https://freepngzone.com/index.html</a></p>
+<h2 id="免费图床">免费图床</h2>
+<ul>
+<li><a href="https://img.4837.cloud/">https://img.4837.cloud/</a></li>
+<li><a href="https://imgse.com/">https://imgse.com/ </a></li>
+<li><a href="https://www.superbed.cn/">https://www.superbed.cn/ </a></li>
+</ul>
+<h2 id="在线简历编辑">在线简历编辑</h2>
+<ul>
+<li><a href="https://www.polebrief.com">极简 Polebrief</a></li>
+<li><a href="https://www.qmjianli.com">全民简历</a></li>
+<li><a href="https://codecv.top/">codeCV简历</a></li>
+<li><a href="https://cv.devtool.tech/">一纸简历</a></li>
+<li><a href="https://easycv.cn/">简单简历</a></li>
+</ul>
+<h2 id="在线练习打字">在线练习打字</h2>
+<ul>
+<li><a href="https://www.ldou.com">https://www.ldou.com</a></li>
+<li><a href="https://dazidazi.com/">https://dazidazi.com/</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Cursor无限使用体验]]></title>
+        <id>https://blog.hbisedm.fun/post/cursor-wu-xian-shi-yong-ti-yan/</id>
+        <link href="https://blog.hbisedm.fun/post/cursor-wu-xian-shi-yong-ti-yan/">
+        </link>
+        <updated>2024-12-25T10:26:42.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>使用一个2925邮箱进行注册</strong></p>
+<h2 id="原理">原理</h2>
+<p><code>123456@2925.com</code> ，<code>123456+1@2925.com</code> 对于cursor注册时，是不同的邮箱， 但是收验证码时，是同一个邮箱<code>123456@2925.com</code>在接收</p>
+<p>同一个邮箱的Trial版本使用过多，cursor会检测出来</p>
+<p>使用<a href="https://github.com/yuaotian/go-cursor-help">重置软件</a>进行重置即可</p>
+<h2 id="如果邮箱不够用">如果邮箱不够用：</h2>
+<p><strong>可使用cloudflare 绑定域名 去关联到 https://tempmail.plue</strong></p>
+<p>自定义邮箱，路由规则选项中的 Catch-All 打开，用于将所有邮件转发到同一地址 （tempmail）<br>
+将上面 cloudflare 自定义邮箱转发地址填写为你的随心所欲字符 @mailto.plus 这样 cloudflare 的部分就弄好了。</p>
+<p><a href="https://linux.do/t/topic/335823">参考</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[每天划水必逛论坛]]></title>
+        <id>https://blog.hbisedm.fun/post/mei-tian-hua-shui-bi-guang-lun-tan/</id>
+        <link href="https://blog.hbisedm.fun/post/mei-tian-hua-shui-bi-guang-lun-tan/">
+        </link>
+        <updated>2024-12-14T07:09:36.000Z</updated>
+        <content type="html"><![CDATA[<ul>
+<li><a href="https://www.v2ex.com/">V2ex</a></li>
+<li><a href="https://linux.do/">LinuxDo</a></li>
+</ul>
+]]></content>
+    </entry>
+</feed>
