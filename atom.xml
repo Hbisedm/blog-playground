@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://blog.hbisedm.fun</id>
+    <title>hbisedm&apos;s Blog</title>
+    <updated>2025-04-02T02:36:33.417Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://blog.hbisedm.fun"/>
+    <link rel="self" href="https://blog.hbisedm.fun/atom.xml"/>
+    <subtitle>&lt;b&gt;知其然更知其所以然&lt;/b&gt;</subtitle>
+    <logo>https://blog.hbisedm.fun/images/avatar.png</logo>
+    <icon>https://blog.hbisedm.fun/favicon.ico</icon>
+    <rights>All rights reserved 2025, hbisedm&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Debian start-scrpit]]></title>
+        <id>https://blog.hbisedm.fun/post/debian-start-scrpit/</id>
+        <link href="https://blog.hbisedm.fun/post/debian-start-scrpit/">
+        </link>
+        <updated>2025-04-02T02:11:29.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>总结：先确认显示管理器，不同显示管理器下的启动脚本不一样。</p>
+</blockquote>
+<p>确认当前Debian系统的 显示管理器</p>
+<pre><code class="language-bash">systemctl status display-manager.service
+</code></pre>
+<p>我的场景：Debian的显示管理器是LightDM</p>
+<p>那么创建启动脚本</p>
+<pre><code class="language-bash">mkdir -p ~/.config/autostart
+vim ~/.config/autostart/start-example.desktop
+</code></pre>
+<p>比如打开chrome 跳转到指定的网址 并且是全屏模式</p>
+<pre><code class="language-ini">[Desktop Entry]
+Type=Application
+Name=Chromium (example.com)
+Exec=chromium --start-fullscreen --app=https://example.com
+Terminal=false
+X-GNOME-Autostart-enabled=true
+</code></pre>
+<p>chromium 常用参数</p>
+<ul>
+<li>--kiosk：强制全屏，无地址栏、无标签栏、无法退出（需按 Alt+F4 或 Ctrl+Alt+Delete 关闭）。</li>
+<li>--incognito（可选）：无痕模式，防止缓存干扰（适合演示环境）。</li>
+<li>--start-fullscreen：启动后自动进入全屏，但仍可按 F11 退出全屏。</li>
+<li>--app：隐藏地址栏和工具栏，界面更简洁。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[法定节假日]]></title>
+        <id>https://blog.hbisedm.fun/post/fa-ding-jie-jia-ri/</id>
+        <link href="https://blog.hbisedm.fun/post/fa-ding-jie-jia-ri/">
+        </link>
+        <updated>2025-03-31T06:04:23.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://img.4837.cloud/upload/202503/67ea30aa063957.33884462.webp" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[uniapp-app与h5通信]]></title>
+        <id>https://blog.hbisedm.fun/post/uniapp-app-yu-h5-tong-xin/</id>
+        <link href="https://blog.hbisedm.fun/post/uniapp-app-yu-h5-tong-xin/">
+        </link>
+        <updated>2025-03-29T07:05:39.000Z</updated>
+        <content type="html"><![CDATA[<p>app里面的webview</p>
+<pre><code class="language-js">&lt;template&gt;
+  &lt;web-view :webview-styles=&quot;webviewStyles&quot; :src=&quot;src&quot;&gt;&lt;/web-view&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  name: 'demo-app',
+  data() {
+    return {
+      webviewStyles: {
+        progress: {
+          color: '#FF3333',
+        },
+      },
+      src: null,
+    }
+  },
+  methods: {},
+
+  mounted() {},
+  onLoad(option) {
+    this.src = decodeURIComponent(option.url)
+  },
+}
+&lt;/script&gt;
+</code></pre>
+<p>外部webview</p>
+<p>把uni.webview.xxxxx.js下载到本地项目的 public 文件夹</p>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;link rel=&quot;icon&quot; type=&quot;image/svg+xml&quot; href=&quot;/vite.svg&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;h5&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;
+    &lt;script type=&quot;module&quot; src=&quot;/src/main.tsx&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;/uni.webview.1.5.6.js&quot;&gt;&lt;/script&gt;
+  &lt;script&gt;
+    document.addEventListener('UniAppJSBridgeReady', function() {
+      console.log('初始化uniapp的API成功');
+    });
+  &lt;/script&gt;
+&lt;/html&gt;
+
+</code></pre>
+<blockquote>
+<p>引入js 在body 下面<br>
+并写入初始化代码</p>
+</blockquote>
+<p>在h5项目里，需要调用uniapp的特有交互的逻辑代码里面直接使用uni即可</p>
+<pre><code class="language-tsx">
+      window.uni.reLaunch({
+        url: '/pages/index/index'
+      });
+      
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[mcp]]></title>
+        <id>https://blog.hbisedm.fun/post/mcp/</id>
+        <link href="https://blog.hbisedm.fun/post/mcp/">
+        </link>
+        <updated>2025-03-26T03:15:10.000Z</updated>
+        <content type="html"><![CDATA[<p>mcp工具网站<br>
+<a href="https://smithery.ai/">https://smithery.ai/</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[前端AI产品Same.new体验]]></title>
+        <id>https://blog.hbisedm.fun/post/qian-duan-ai-chan-pin-ti-yan-1/</id>
+        <link href="https://blog.hbisedm.fun/post/qian-duan-ai-chan-pin-ti-yan-1/">
+        </link>
+        <updated>2025-03-19T09:00:09.000Z</updated>
+        <content type="html"><![CDATA[<p>最近，我发现了一个非常美观的颜色网站——<a href="https://colors.masantu.com/#/">中国传统色</a>。这个网站不仅色彩丰富、搭配和谐，而且背后蕴含着深厚的文化底蕴，非常适合设计师和开发者们寻找灵感。<br>
+此外，在过去的30天里，一款名为 <a href="https://same.new/">Same.new</a> 的AI产品引起了广泛关注。这款工具以“Copy any UI”（复制任何用户界面）为理念，旨在开启UI开发的新时代。它的工作方式极其简单却强大：用户只需提供想要模仿的网页URL，Same.new就能自动生成一个几乎完全一致的像素级复制品。这一过程极大地简化了前端开发流程，让原本需要大量手工编码才能完成的任务变得轻松快捷。可以说，Same.new就像是给UI开发者们配备了一把神奇的“复制粘贴”钥匙，开启了前所未有的高效开发模式。<br>
+对于那些对如何使用Same.new感兴趣的朋友来说，这里有一个具体的例子可以参考：通过访问<a href="https://same.new/chat/clone-httpscolors-masantu-com-by821j3y8f5">此链接</a>，你可以看到将上述提到的传统颜色网站克隆到本地的过程。在这个过程中，系统会为你生成一个基于Next.js框架的项目文件。接下来，你只需要按照以下步骤操作即可：</p>
+<ol>
+<li><strong>导入项目</strong>：首先，你需要将下载好的项目文件导入到你的开发环境中。</li>
+<li><strong>安装依赖</strong>：打开终端并导航至项目目录下，然后运行<code>bun install</code>命令来安装所有必要的依赖包。这里特别提到了使用Bun作为包管理器，因为它比传统的npm或yarn更快更高效。</li>
+<li><strong>启动项目</strong>：最后一步是启动应用程序。在终端中输入<code>bun run dev</code>命令，这将会启动开发服务器，并允许你在浏览器中预览最终效果。</li>
+</ol>
+<pre><code class="language-bash">bun i
+bun dev
+</code></pre>
+<p>效果图：</p>
+<figure data-type="image" tabindex="1"><img src="https://cdn.nlark.com/yuque/0/2025/png/26106494/1742375942443-84851696-38f3-470e-b854-ba754393b906.png" alt="" loading="lazy"></figure>
+<p>可以发现，新版本的网站在外观上与原网站存在较大的差异，但其核心功能保持了一致。这种变化可能是为了提升用户体验或是适应新的设计趋势。此外，另一个显著的变化是颜色使用的减少，这可能旨在简化视觉效果，让页面看起来更加清爽简洁。<br>
+针对颜色使用较少的问题，可以通过以下步骤来解决：</p>
+<ol>
+<li><strong>下载颜色配置文件</strong>：首先需要从GitHub上的指定仓库中下载<code>zhColors.json</code>文件。该文件包含了更丰富的色彩定义，可以帮助恢复或增加网站的颜色多样性。请访问<a href="https://github.com/imoyao/GUSCSS/blob/master/src/data/zhColors.json">这里</a>进行下载，并将此文件放置于你的项目中的<code>src/data</code>目录下。</li>
+<li><strong>利用Cursor的Panel功能</strong>：接下来，推荐使用开发工具Cursor中的Panel功能来管理和预览这些颜色。Cursor是一款强大的前端开发辅助工具，它允许开发者轻松地查看和调整网页元素的样式。通过它的Panel功能，你可以直接加载刚才添加到项目的<code>zhColors.json</code>文件，这样就可以方便地选取并应用其中定义的各种颜色了。确保已经正确安装并配置好了Cursor工具后，在面板中找到相应的选项导入JSON文件即可开始使用。</li>
+</ol>
+<pre><code class="language-plain">@zhColors.json 这个是源数据， 期望将里面的数据迁移到 @zh-colors.ts 里面， 按照zh-colors.ts 的格式来迁移， 我怕json文件太大了， 如果tokens过大的话， 写个bun脚本在 @data 文件夹下， 命名script.ts 就好 
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://cdn.nlark.com/yuque/0/2025/png/26106494/1742376479898-23b42403-63a8-4eee-a7da-65e35f7d4b91.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[青龙面板知名脚本库]]></title>
+        <id>https://blog.hbisedm.fun/post/qing-long-mian-ban-zhi-ming-jiao-ben-ku/</id>
+        <link href="https://blog.hbisedm.fun/post/qing-long-mian-ban-zhi-ming-jiao-ben-ku/">
+        </link>
+        <updated>2025-03-15T07:41:43.000Z</updated>
+        <content type="html"><![CDATA[<p><a href="https://github.com/smallfawn/QLScriptPublic">https://github.com/smallfawn/QLScriptPublic</a></p>
+<p><a href="https://github.com/linbailo/zyqinglong">https://github.com/linbailo/zyqinglong</a></p>
+<p><a href="https://github.com/checkToke/yangtai">https://github.com/checkToke/yangtai</a></p>
+<p><a href="https://github.com/sudojia/AutoTaskScript">https://github.com/sudojia/AutoTaskScript</a></p>
+<p><a href="https://github.com/Sitoi/dailycheckin">https://github.com/Sitoi/dailycheckin</a></p>
+<p><a href="https://github.com/3288588344/toulu">https://github.com/3288588344/toulu</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[微信小程序上传腾讯云COS]]></title>
+        <id>https://blog.hbisedm.fun/post/wei-xin-xiao-cheng-xu-shang-chuan-teng-xun-yun-cos/</id>
+        <link href="https://blog.hbisedm.fun/post/wei-xin-xiao-cheng-xu-shang-chuan-teng-xun-yun-cos/">
+        </link>
+        <updated>2025-01-15T11:15:24.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="操作">操作</h2>
+<pre><code class="language-bash">pnpm i cos-wx-sdk-v5
+</code></pre>
+<p>封装代码</p>
+<pre><code class="language-ts">import { cosSts } from '@/service/common'
+import COS from 'cos-wx-sdk-v5'
+
+export default function useUpload2&lt;T = string&gt;(formData: Record&lt;string, any&gt; = {}) {
+  const loading = ref(false)
+  const error = ref(false)
+  const data = ref&lt;T&gt;()
+  const run = () =&gt; {
+    // #ifdef MP-WEIXIN
+    // 微信小程序从基础库 2.21.0 开始， wx.chooseImage 停止维护，请使用 uni.chooseMedia 代替。
+    // 微信小程序在2023年10月17日之后，使用本API需要配置隐私协议
+    uni.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      success: (res) =&gt; {
+        loading.value = true
+        const file = res.tempFiles[0]
+        uploadFile&lt;T&gt;({ file, formData, data, error, loading })
+      },
+      fail: (err) =&gt; {
+        error.value = true
+      },
+    })
+    // #endif
+    // #ifndef MP-WEIXIN
+    uni.chooseImage({
+      count: 1,
+      success: (res) =&gt; {
+        loading.value = true
+        const file = res.tempFilePaths[0]
+        uploadFile&lt;T&gt;({ file, formData, data, error, loading })
+      },
+      fail: (err) =&gt; {
+        error.value = true
+      },
+    })
+    // #endif
+  }
+
+  return { loading, error, data, run }
+}
+
+function uploadFile&lt;T&gt;({ file, formData, data, error, loading }) {
+// cosSts 服务端接口需要返回：上传的存储桶、地域、随机路径的对象键、临时密钥 等
+  cosSts().then((res) =&gt; {
+    const {
+      bucketName,
+      regionName,
+      startTime,
+      expiredTime,
+      tmpSecretId,
+      tmpSecretKey,
+      sessionToken,
+    } = res.data
+    const cos = new COS({
+      SecretId: tmpSecretId,
+      SecretKey: tmpSecretKey,
+      SecurityToken: sessionToken,
+      StartTime: startTime,
+      ExpiredTime: expiredTime,
+      SimpleUploadMethod: 'putObject',
+    })
+
+    cos
+      .uploadFile({
+        Bucket: bucketName,
+        Region: regionName,
+        Key: Date.now() + '.jpg',
+        FilePath: file.tempFilePath,
+        FileSize: file.size,
+      })
+      .then((res) =&gt; {
+        data.value = res.Location
+      })
+      .catch(() =&gt; {
+        error.value = true
+      })
+      .finally(() =&gt; {
+        loading.value = false
+      })
+  })
+}
+
+</code></pre>
+<h2 id="参考链接">参考链接</h2>
+<p><a href="https://cloud.tencent.com/document/product/436/109370">上传对象实践教程</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[node18在Centos7安装]]></title>
+        <id>https://blog.hbisedm.fun/post/node18-zai-centos7-an-zhuang/</id>
+        <link href="https://blog.hbisedm.fun/post/node18-zai-centos7-an-zhuang/">
+        </link>
+        <updated>2025-01-09T09:27:00.000Z</updated>
+        <content type="html"><![CDATA[<p>一开始不知道这个限制，捣鼓了很久，记录一下</p>
+<p>从nodejs18开始就不支持Centos7了，这是因为centos7的gilbc版本比较低，因此需要安装非官方构建的版本。</p>
+<p>三个方案来解决这个问题：</p>
+<ul>
+<li>从源代码安装 Node。这将允许您重新编译</li>
+<li>安装操作系统可支持的旧版本 Node</li>
+<li>将你的 Linux 操作系统升级到更新的版本。</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/74698021/installing-node-lib64-libm-so-6-version-glibc-2-27-not-found-required-by-n">Installing node: /lib64/libm.so.6: version `GLIBC_2.27' not found (required by node) error on linux</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Jenkins构建前端项目与部署]]></title>
+        <id>https://blog.hbisedm.fun/post/ji-lu/</id>
+        <link href="https://blog.hbisedm.fun/post/ji-lu/">
+        </link>
+        <updated>2024-12-28T03:04:24.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="前提">前提</h2>
+<p>docker里面安装nginx/openresty服务器<br>
+里面挂载宿主机一个目录 用于 服务器资源文件的修改<br>
+docker里面安装jenkins</p>
+<blockquote>
+<p>本文是用<code>1panel</code>去操作容器， 当然用docker命令去操作也可，一个道理</p>
+</blockquote>
+<h2 id="安装">安装</h2>
+<p>创建jenkins目录</p>
+<pre><code class="language-bash">mkdir -p /home/jenkins
+</code></pre>
+<p>新增jenkins网络</p>
+<pre><code class="language-bash">    docker network create jenkins_net
+</code></pre>
+<p>使用docker-compose安装jenkins</p>
+<pre><code class="language-yml">services:
+  xxx_jenkins:
+    image: jenkins/jenkins
+    container_name: xxx_jenkins
+    user: root
+    networks:
+      - jenkins_net
+    ports:
+      - 8990:8080
+      - 50000:50000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/jenkins/jenkins_home:/var/jenkins_home
+networks:
+  jenkins_net:
+</code></pre>
+<blockquote>
+<p><code>volumes</code>: 挂载宿主机的目录或文件到容器中。在这个例子中，宿主机的 <code>/var/run/docker.sock</code> 文件被挂载到容器的同一位置，宿主机的 <code>/home/jenkins/jenkins_home</code> 目录被挂载到容器的 <code>/var/jenkins_home</code> 目录。</p>
+</blockquote>
+<p>使用 docker compose 启动 Jenkins</p>
+<pre><code class="language-bash">docker compose up -d
+</code></pre>
+<pre><code class="language-bash">[root@localhost jenkins]# docker ps -a
+CONTAINER ID   IMAGE                                 COMMAND                   CREATED        STATUS                      PORTS                                                                                                                                                                                                                    NAMES
+7f01e9c84eed   jenkins/jenkins                       &quot;/usr/bin/tini -- /u…&quot;   6 days ago     Up 46 hours                 0.0.0.0:50000-&gt;50000/tcp, :::50000-&gt;50000/tcp, 0.0.0.0:8990-&gt;8080/tcp, :::8990-&gt;8080/tcp                                                                                                                                 jhl_jenkins
+</code></pre>
+<h2 id="开始操作jenkins">开始操作jenkins</h2>
+<p>上面是我将宿主机的8990映射到容器内的8080，所以需要对端口为8990放行</p>
+<figure data-type="image" tabindex="1"><img src="https://img.4837.cloud/upload/202501/677642df9e91a4.22015476.png" alt="放行端口号" loading="lazy"></figure>
+<p>第一次进入需要获取密码</p>
+<pre><code class="language-bash">cat /var/jenkins_home/secrets/initialAdminPassword
+</code></pre>
+<ul>
+<li>登录后，选择<strong>自定义 Jenkins - 选择插件来安装</strong></li>
+<li>进去后 - 点击 无 - 滚动到底部 - **选择Localization: Chinese (Simplified) **- 安装</li>
+<li>只安装一个插件 Localization: Chinese (Simplified)</li>
+<li>其他按默认一直下一步就行</li>
+</ul>
+<h2 id="配置插件源">配置插件源</h2>
+<p>Dashboard -&gt; 系统管理 -&gt; 插件管理 -&gt; Advanced setting -&gt; 配置镜像源</p>
+<p>修改为：<code>https://updates.jenkins.io/update-center.json</code></p>
+<p>修改后，需要重启Jenkins</p>
+<figure data-type="image" tabindex="2"><img src="https://img.4837.cloud/upload/202501/67764543c3cba2.25768036.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://img.4837.cloud/upload/202501/6776456030a135.37985032.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>但是这样操作的话， 还是下载不了插件，设置全局配置加入网络代理</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://img.4837.cloud/upload/202501/677648fbb9cd28.44605933.png" alt="" loading="lazy"></figure>
+<h2 id="远程触发构建">远程触发构建</h2>
+<p>Jenkins 官网 - 跨站请求伪造保护：https://www.jenkins.io/doc/book/security/csrf-protection/</p>
+<p>Jenkins 远程触发 403 No valid crumb was included in the request https://www.jianshu.com/p/00fcfa4a53b5</p>
+<p>系统管理 - 脚本命令行</p>
+<p>输入下面脚本 - 点击运行</p>
+<pre><code class="language-yml">hudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION = true
+</code></pre>
+<p>勾选-匿名用户具有可读写权限</p>
+<figure data-type="image" tabindex="5"><img src="https://img.4837.cloud/upload/202501/67764a23ee2724.49527320.png" alt="" loading="lazy"></figure>
+<p>配置-触发远程构建</p>
+<figure data-type="image" tabindex="6"><img src="https://img.4837.cloud/upload/202501/67764a711ff6d5.12658035.png" alt="" loading="lazy"></figure>
+<p>比如我的就是 http://192.168.8.196:8990/job/factoryPc195/build?token=0b5d34cbe2a30ce849426ef395565373</p>
+<figure data-type="image" tabindex="7"><img src="https://img.4837.cloud/upload/202501/67764ae4395a82.14011199.png" alt="" loading="lazy"></figure>
+<h2 id="jenkins拉取远程代码-构建任务打包前端资源文件">Jenkins拉取远程代码-构建任务（打包前端资源文件）</h2>
+<p>那么需要安装git，node插件</p>
+<p>Git: https://plugins.jenkins.io/git/<br>
+nodejs: https://plugins.jenkins.io/nodejs/</p>
+<p>创建任务</p>
+<figure data-type="image" tabindex="8"><img src="https://img.4837.cloud/upload/202501/67764ba43ce979.22771216.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://img.4837.cloud/upload/202501/67764bceb5aed5.24378784.png" alt="" loading="lazy"></figure>
+<p>对于私有仓库需要个凭证才能拉取项目，填写对应信息</p>
+<figure data-type="image" tabindex="10"><img src="https://img.4837.cloud/upload/202501/67764c39d0a512.76787276.png" alt="" loading="lazy"></figure>
+<p>拉取前端项目后，需要运行<code>npm run build</code> 这就需要node环境</p>
+<p>配置node：</p>
+<figure data-type="image" tabindex="11"><img src="https://img.4837.cloud/upload/202501/67764cb6a1cd41.86598310.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://img.4837.cloud/upload/202501/67764cfae49547.85626104.png" alt="" loading="lazy"></figure>
+<p>Jenkins 任务 - 配置 Node.js 环境</p>
+<figure data-type="image" tabindex="13"><img src="https://img.4837.cloud/upload/202501/67764d6371f3a7.39210173.png" alt="" loading="lazy"></figure>
+<p>测试 nodejs 环境是否生效</p>
+<figure data-type="image" tabindex="14"><img src="https://img.4837.cloud/upload/202501/67764d9009ca94.83797284.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://img.4837.cloud/upload/202501/67764dad15f225.54556389.png" alt="" loading="lazy"></figure>
+<p>点击构建，查看控制台输出</p>
+<figure data-type="image" tabindex="16"><img src="https://img.4837.cloud/upload/202501/67764dd5b54516.75679666.png" alt="" loading="lazy"></figure>
+<p>拉取一个前端项目（vue、react都可）</p>
+<p>运行一个package.json里的script构建命令，假设为<code>build</code> ，会得到一个打包文件夹，假设为<code>dist</code></p>
+<pre><code class="language-bash">npm run build
+#  使用 tar 命令压缩 ./dist 目录
+tar zcvf dist.tar.gz ./dist
+</code></pre>
+<h2 id="将打包好的文件夹丢到远程服务器">将打包好的文件夹丢到远程服务器</h2>
+<p>思路：</p>
+<p>由于我的资源文件是放在当前容器的宿主机的nginx服务<br>
+那么我需要将这个容器和宿主机打通文件传输<br>
+使用ssh连接我的宿主机<br>
+接着使用scp将dist.tar.gz丢到宿主机的指定目录</p>
+<p><strong>公钥放在远程服务器，并命名为 authorized_keys， 私钥在jenkins服务器内。</strong></p>
+<pre><code class="language-bash">cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre>
+<p>这样jenkins服务器内输入 ssh 、scp 等链接远程服务器后，无需密码即可操作。</p>
+<p>操作：</p>
+<pre><code class="language-bash"># 进入jenkins
+docker exec -it &lt;jenkins容器id&gt; /bin/bash 
+
+# 在本地机器上生成密钥对
+ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;
+
+# 将公钥复制到服务器(宿主机)
+# 替换 username 为服务器的用户名，server_ip 为服务器的 IP 地址。
+# 系统会提示输入服务器的密码，公钥将自动添加到服务器的 ~/.ssh/authorized_keys 文件中。
+ssh-copy-id username@server_ip
+
+# 测试 SSH 密钥登录
+# 如果配置正确，应该无需输入密码即可登录（若设置了密码短语，则需输入短语）。
+ssh username@server_ip
+
+</code></pre>
+<p>jenkins 安装 ssh-agent 插件</p>
+<figure data-type="image" tabindex="17"><img src="https://img.4837.cloud/upload/202501/6776528e511a26.83169673.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://img.4837.cloud/upload/202501/67765313b3dba9.06465003.png" alt="" loading="lazy"></figure>
+<p>配置执行shell</p>
+<pre><code class="language-bash">node -v
+npm -v
+npm config set registry https://registry.npmmirror.com
+npm i
+
+npm run build
+
+ls
+tar zcvf dist.tar.gz ./pc-dist
+ls
+
+# 启动ssh-agent，这个代理会管理SSH私钥，用于无密码登录
+eval $(ssh-agent -s)
+
+
+scp dist.tar.gz root@192.168.8.196:/home/1panel/apps/openresty/openresty/www/sites/xxx
+
+ssh -v root@192.168.8.196 &quot;cd /home/1panel/apps/openresty/openresty/www/sites/xxx; rm -rf index; mkdir index; tar zxvf dist.tar.gz; mv ./pc-dist/* ./index/; rm -rf ./pc-dist; exit&quot;
+
+# 结束 ssh-agent 会话
+ssh-agent -k
+
+</code></pre>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://hostalk.net/posts/linux_sshkey.html">服务器配置SSH密钥登陆</a></li>
+<li><a href="https://cloud.tencent.com/developer/information/%E4%BD%BF%E7%94%A8cURL%E5%91%BD%E4%BB%A4%E8%A7%A6%E5%8F%91%E6%88%91%E7%9A%84Jenkins%E6%9E%84%E5%BB%BA%E4%BD%9C%E4%B8%9A">使用cURL命令触发我的Jenkins构建作业</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[工具、插件、网站]]></title>
+        <id>https://blog.hbisedm.fun/post/gong-ju-cha-jian/</id>
+        <link href="https://blog.hbisedm.fun/post/gong-ju-cha-jian/">
+        </link>
+        <updated>2024-12-28T02:54:09.000Z</updated>
+        <content type="html"><![CDATA[<p>持续更新ing</p>
+<h2 id="字体">字体</h2>
+<p><a href="https://www.nerdfonts.com/">FiraCode Nerd Font Propo</a></p>
+<h2 id="渐变神器">渐变神器</h2>
+<p><a href="https://gradient.shapefactory.co/">Gradient</a></p>
+<h2 id="阴影工具在线网站">阴影工具在线网站</h2>
+<p><a href="https://lingdaima.com/shadow/">https://lingdaima.com/shadow/</a></p>
+<h2 id="box-shadow阴影网站">box-shadow阴影网站</h2>
+<p><a href="https://box-shadow.art/">https://box-shadow.art/</a></p>
+<h2 id="网站ui配色宝藏网站ui">网站UI配色宝藏网站UI</h2>
+<p><a href="https://colorify.rocks/">AI 调色盘生成器</a><br>
+<a href="https://www.uidesigndaily.com/">Design Daily</a></p>
+<h2 id="small-dev-tools实用工具合集">Small Dev tools实用工具合集</h2>
+<p><a href="https://smalldev.tools/">https://smalldev.tools/</a></p>
+<h2 id="glass-morphism-在线制作-css-玻璃风格神器">Glass Morphism 在线制作 CSS 玻璃风格神器</h2>
+<p><a href="https://glassgenerator.netlify.app/">https://glassgenerator.netlify.app/</a></p>
+<h2 id="keyframes-在线动画-阴影和颜色">Keyframes 在线动画、阴影和颜色</h2>
+<p><a href="https://keyframes.app/">https://keyframes.app/</a><br>
+<a href="https://animxyz.com/">https://animxyz.com/</a></p>
+<h2 id="bgjar-在线svg-背景">BGJar 在线SVG 背景</h2>
+<p><a href="https://bgjar.com/">https://bgjar.com/</a></p>
+<h2 id="在线图片压缩">在线图片压缩</h2>
+<ul>
+<li><a href="https://www.onlineimagetool.com/zh/">https://www.onlineimagetool.com/zh/ </a></li>
+<li><a href="https://tinypng.com/">https://tinypng.com/</a></li>
+</ul>
+<h2 id="markdown-在线编辑">Markdown 在线编辑</h2>
+<p><a href="https://editor.runjs.cool">https://editor.runjs.cool</a></p>
+<h2 id="免费的-png-图片搜索好像只支持英文">免费的 PNG 图片搜索，好像只支持英文</h2>
+<p><a href="https://freepngzone.com/index.html">https://freepngzone.com/index.html</a></p>
+<h2 id="免费图床">免费图床</h2>
+<ul>
+<li><a href="https://img.4837.cloud/">https://img.4837.cloud/</a></li>
+<li><a href="https://imgse.com/">https://imgse.com/ </a></li>
+<li><a href="https://www.superbed.cn/">https://www.superbed.cn/ </a></li>
+</ul>
+<h2 id="在线简历编辑">在线简历编辑</h2>
+<ul>
+<li><a href="https://www.polebrief.com">极简 Polebrief</a></li>
+<li><a href="https://www.qmjianli.com">全民简历</a></li>
+<li><a href="https://codecv.top/">codeCV简历</a></li>
+<li><a href="https://cv.devtool.tech/">一纸简历</a></li>
+<li><a href="https://easycv.cn/">简单简历</a></li>
+</ul>
+<h2 id="在线练习打字">在线练习打字</h2>
+<ul>
+<li><a href="https://www.ldou.com">https://www.ldou.com</a></li>
+<li><a href="https://dazidazi.com/">https://dazidazi.com/</a></li>
+</ul>
+]]></content>
+    </entry>
+</feed>
