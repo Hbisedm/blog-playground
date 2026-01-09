@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://blog.hbisedm.de5.net</id>
+    <title>hbisedm&apos;s Blog</title>
+    <updated>2026-01-09T09:40:06.203Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://blog.hbisedm.de5.net"/>
+    <link rel="self" href="https://blog.hbisedm.de5.net/atom.xml"/>
+    <subtitle>&lt;b&gt;知其然更知其所以然&lt;/b&gt;</subtitle>
+    <logo>https://blog.hbisedm.de5.net/images/avatar.png</logo>
+    <icon>https://blog.hbisedm.de5.net/favicon.ico</icon>
+    <rights>All rights reserved 2026, hbisedm&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[动画特效组件]]></title>
+        <id>https://blog.hbisedm.de5.net/post/dong-hua-te-xiao-zu-jian/</id>
+        <link href="https://blog.hbisedm.de5.net/post/dong-hua-te-xiao-zu-jian/">
+        </link>
+        <updated>2025-04-02T06:35:39.000Z</updated>
+        <content type="html"><![CDATA[<p>Vue</p>
+<p>https://inspira-ui.com/</p>
+<p>React</p>
+<p>https://www.reactbits.dev/</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[特效组件]]></title>
+        <id>https://blog.hbisedm.de5.net/post/te-xiao-zu-jian/</id>
+        <link href="https://blog.hbisedm.de5.net/post/te-xiao-zu-jian/">
+        </link>
+        <updated>2025-04-02T06:35:39.000Z</updated>
+        <content type="html"><![CDATA[<p>Vue</p>
+<p>https://inspira-ui.com/</p>
+<p>React</p>
+<p>https://www.reactbits.dev/</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Debian操作系统-界面-开机启动脚本]]></title>
+        <id>https://blog.hbisedm.de5.net/post/debian-start-scrpit/</id>
+        <link href="https://blog.hbisedm.de5.net/post/debian-start-scrpit/">
+        </link>
+        <updated>2025-04-02T02:11:29.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>总结：先确认显示管理器，不同显示管理器下的启动脚本不一样。</p>
+</blockquote>
+<p>确认当前Debian系统的 显示管理器</p>
+<pre><code class="language-bash">systemctl status display-manager.service
+</code></pre>
+<p>我的场景：Debian的显示管理器是LightDM</p>
+<p>那么创建启动脚本</p>
+<pre><code class="language-bash">mkdir -p ~/.config/autostart
+vim ~/.config/autostart/start-example.desktop
+</code></pre>
+<p>比如打开chrome 跳转到指定的网址 并且是全屏模式</p>
+<pre><code class="language-ini">[Desktop Entry]
+Type=Application
+Name=Chromium (example.com)
+Exec=chromium --start-fullscreen --app=https://example.com
+Terminal=false
+X-GNOME-Autostart-enabled=true
+</code></pre>
+<p>chromium 常用参数</p>
+<ul>
+<li>--kiosk：强制全屏，无地址栏、无标签栏、无法退出（需按 Alt+F4 或 Ctrl+Alt+Delete 关闭）。</li>
+<li>--incognito（可选）：无痕模式，防止缓存干扰（适合演示环境）。</li>
+<li>--start-fullscreen：启动后自动进入全屏，但仍可按 F11 退出全屏。</li>
+<li>--app：隐藏地址栏和工具栏，界面更简洁。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[法定节假日]]></title>
+        <id>https://blog.hbisedm.de5.net/post/fa-ding-jie-jia-ri/</id>
+        <link href="https://blog.hbisedm.de5.net/post/fa-ding-jie-jia-ri/">
+        </link>
+        <updated>2025-03-31T06:04:23.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://img.4837.cloud/upload/202503/67ea30aa063957.33884462.webp" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[uniapp-app与h5通信]]></title>
+        <id>https://blog.hbisedm.de5.net/post/uniapp-app-yu-h5-tong-xin/</id>
+        <link href="https://blog.hbisedm.de5.net/post/uniapp-app-yu-h5-tong-xin/">
+        </link>
+        <updated>2025-03-29T07:05:39.000Z</updated>
+        <content type="html"><![CDATA[<p>app里面的webview</p>
+<pre><code class="language-js">&lt;template&gt;
+  &lt;web-view :webview-styles=&quot;webviewStyles&quot; :src=&quot;src&quot;&gt;&lt;/web-view&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  name: 'demo-app',
+  data() {
+    return {
+      webviewStyles: {
+        progress: {
+          color: '#FF3333',
+        },
+      },
+      src: null,
+    }
+  },
+  methods: {},
+
+  mounted() {},
+  onLoad(option) {
+    this.src = decodeURIComponent(option.url)
+  },
+}
+&lt;/script&gt;
+</code></pre>
+<p>外部webview</p>
+<p>把uni.webview.xxxxx.js下载到本地项目的 public 文件夹</p>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;link rel=&quot;icon&quot; type=&quot;image/svg+xml&quot; href=&quot;/vite.svg&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;h5&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;root&quot;&gt;&lt;/div&gt;
+    &lt;script type=&quot;module&quot; src=&quot;/src/main.tsx&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;/uni.webview.1.5.6.js&quot;&gt;&lt;/script&gt;
+  &lt;script&gt;
+    document.addEventListener('UniAppJSBridgeReady', function() {
+      console.log('初始化uniapp的API成功');
+    });
+  &lt;/script&gt;
+&lt;/html&gt;
+
+</code></pre>
+<blockquote>
+<p>引入js 在body 下面<br>
+并写入初始化代码</p>
+</blockquote>
+<p>在h5项目里，需要调用uniapp的特有交互的逻辑代码里面直接使用uni即可</p>
+<pre><code class="language-tsx">
+      window.uni.reLaunch({
+        url: '/pages/index/index'
+      });
+      
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[mcp工具网站]]></title>
+        <id>https://blog.hbisedm.de5.net/post/mcp/</id>
+        <link href="https://blog.hbisedm.de5.net/post/mcp/">
+        </link>
+        <updated>2025-03-26T03:15:10.000Z</updated>
+        <content type="html"><![CDATA[<ul>
+<li><a href="https://smithery.ai/">https://smithery.ai/</a></li>
+<li><a href="https://mcp.so/">https://mcp.so/</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[前端AI产品Same.new体验]]></title>
+        <id>https://blog.hbisedm.de5.net/post/qian-duan-ai-chan-pin-ti-yan-1/</id>
+        <link href="https://blog.hbisedm.de5.net/post/qian-duan-ai-chan-pin-ti-yan-1/">
+        </link>
+        <updated>2025-03-19T09:00:09.000Z</updated>
+        <content type="html"><![CDATA[<p>最近，我发现了一个非常美观的颜色网站——<a href="https://colors.masantu.com/#/">中国传统色</a>。这个网站不仅色彩丰富、搭配和谐，而且背后蕴含着深厚的文化底蕴，非常适合设计师和开发者们寻找灵感。<br>
+此外，在过去的30天里，一款名为 <a href="https://same.new/">Same.new</a> 的AI产品引起了广泛关注。这款工具以“Copy any UI”（复制任何用户界面）为理念，旨在开启UI开发的新时代。它的工作方式极其简单却强大：用户只需提供想要模仿的网页URL，Same.new就能自动生成一个几乎完全一致的像素级复制品。这一过程极大地简化了前端开发流程，让原本需要大量手工编码才能完成的任务变得轻松快捷。可以说，Same.new就像是给UI开发者们配备了一把神奇的“复制粘贴”钥匙，开启了前所未有的高效开发模式。<br>
+对于那些对如何使用Same.new感兴趣的朋友来说，这里有一个具体的例子可以参考：通过访问<a href="https://same.new/chat/clone-httpscolors-masantu-com-by821j3y8f5">此链接</a>，你可以看到将上述提到的传统颜色网站克隆到本地的过程。在这个过程中，系统会为你生成一个基于Next.js框架的项目文件。接下来，你只需要按照以下步骤操作即可：</p>
+<ol>
+<li><strong>导入项目</strong>：首先，你需要将下载好的项目文件导入到你的开发环境中。</li>
+<li><strong>安装依赖</strong>：打开终端并导航至项目目录下，然后运行<code>bun install</code>命令来安装所有必要的依赖包。这里特别提到了使用Bun作为包管理器，因为它比传统的npm或yarn更快更高效。</li>
+<li><strong>启动项目</strong>：最后一步是启动应用程序。在终端中输入<code>bun run dev</code>命令，这将会启动开发服务器，并允许你在浏览器中预览最终效果。</li>
+</ol>
+<pre><code class="language-bash">bun i
+bun dev
+</code></pre>
+<p>效果图：</p>
+<figure data-type="image" tabindex="1"><img src="https://cdn.nlark.com/yuque/0/2025/png/26106494/1742375942443-84851696-38f3-470e-b854-ba754393b906.png" alt="" loading="lazy"></figure>
+<p>可以发现，新版本的网站在外观上与原网站存在较大的差异，但其核心功能保持了一致。这种变化可能是为了提升用户体验或是适应新的设计趋势。此外，另一个显著的变化是颜色使用的减少，这可能旨在简化视觉效果，让页面看起来更加清爽简洁。<br>
+针对颜色使用较少的问题，可以通过以下步骤来解决：</p>
+<ol>
+<li><strong>下载颜色配置文件</strong>：首先需要从GitHub上的指定仓库中下载<code>zhColors.json</code>文件。该文件包含了更丰富的色彩定义，可以帮助恢复或增加网站的颜色多样性。请访问<a href="https://github.com/imoyao/GUSCSS/blob/master/src/data/zhColors.json">这里</a>进行下载，并将此文件放置于你的项目中的<code>src/data</code>目录下。</li>
+<li><strong>利用Cursor的Panel功能</strong>：接下来，推荐使用开发工具Cursor中的Panel功能来管理和预览这些颜色。Cursor是一款强大的前端开发辅助工具，它允许开发者轻松地查看和调整网页元素的样式。通过它的Panel功能，你可以直接加载刚才添加到项目的<code>zhColors.json</code>文件，这样就可以方便地选取并应用其中定义的各种颜色了。确保已经正确安装并配置好了Cursor工具后，在面板中找到相应的选项导入JSON文件即可开始使用。</li>
+</ol>
+<pre><code class="language-plain">@zhColors.json 这个是源数据， 期望将里面的数据迁移到 @zh-colors.ts 里面， 按照zh-colors.ts 的格式来迁移， 我怕json文件太大了， 如果tokens过大的话， 写个bun脚本在 @data 文件夹下， 命名script.ts 就好 
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://cdn.nlark.com/yuque/0/2025/png/26106494/1742376479898-23b42403-63a8-4eee-a7da-65e35f7d4b91.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[青龙面板知名脚本库]]></title>
+        <id>https://blog.hbisedm.de5.net/post/qing-long-mian-ban-zhi-ming-jiao-ben-ku/</id>
+        <link href="https://blog.hbisedm.de5.net/post/qing-long-mian-ban-zhi-ming-jiao-ben-ku/">
+        </link>
+        <updated>2025-03-15T07:41:43.000Z</updated>
+        <content type="html"><![CDATA[<p><a href="https://github.com/smallfawn/QLScriptPublic">https://github.com/smallfawn/QLScriptPublic</a></p>
+<p><a href="https://github.com/linbailo/zyqinglong">https://github.com/linbailo/zyqinglong</a></p>
+<p><a href="https://github.com/checkToke/yangtai">https://github.com/checkToke/yangtai</a></p>
+<p><a href="https://github.com/sudojia/AutoTaskScript">https://github.com/sudojia/AutoTaskScript</a></p>
+<p><a href="https://github.com/Sitoi/dailycheckin">https://github.com/Sitoi/dailycheckin</a></p>
+<p><a href="https://github.com/3288588344/toulu">https://github.com/3288588344/toulu</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[微信小程序上传腾讯云COS]]></title>
+        <id>https://blog.hbisedm.de5.net/post/wei-xin-xiao-cheng-xu-shang-chuan-teng-xun-yun-cos/</id>
+        <link href="https://blog.hbisedm.de5.net/post/wei-xin-xiao-cheng-xu-shang-chuan-teng-xun-yun-cos/">
+        </link>
+        <updated>2025-01-15T11:15:24.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="操作">操作</h2>
+<pre><code class="language-bash">pnpm i cos-wx-sdk-v5
+</code></pre>
+<p>封装代码</p>
+<pre><code class="language-ts">import { cosSts } from '@/service/common'
+import COS from 'cos-wx-sdk-v5'
+
+export default function useUpload2&lt;T = string&gt;(formData: Record&lt;string, any&gt; = {}) {
+  const loading = ref(false)
+  const error = ref(false)
+  const data = ref&lt;T&gt;()
+  const run = () =&gt; {
+    // #ifdef MP-WEIXIN
+    // 微信小程序从基础库 2.21.0 开始， wx.chooseImage 停止维护，请使用 uni.chooseMedia 代替。
+    // 微信小程序在2023年10月17日之后，使用本API需要配置隐私协议
+    uni.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      success: (res) =&gt; {
+        loading.value = true
+        const file = res.tempFiles[0]
+        uploadFile&lt;T&gt;({ file, formData, data, error, loading })
+      },
+      fail: (err) =&gt; {
+        error.value = true
+      },
+    })
+    // #endif
+    // #ifndef MP-WEIXIN
+    uni.chooseImage({
+      count: 1,
+      success: (res) =&gt; {
+        loading.value = true
+        const file = res.tempFilePaths[0]
+        uploadFile&lt;T&gt;({ file, formData, data, error, loading })
+      },
+      fail: (err) =&gt; {
+        error.value = true
+      },
+    })
+    // #endif
+  }
+
+  return { loading, error, data, run }
+}
+
+function uploadFile&lt;T&gt;({ file, formData, data, error, loading }) {
+// cosSts 服务端接口需要返回：上传的存储桶、地域、随机路径的对象键、临时密钥 等
+  cosSts().then((res) =&gt; {
+    const {
+      bucketName,
+      regionName,
+      startTime,
+      expiredTime,
+      tmpSecretId,
+      tmpSecretKey,
+      sessionToken,
+    } = res.data
+    const cos = new COS({
+      SecretId: tmpSecretId,
+      SecretKey: tmpSecretKey,
+      SecurityToken: sessionToken,
+      StartTime: startTime,
+      ExpiredTime: expiredTime,
+      SimpleUploadMethod: 'putObject',
+    })
+
+    cos
+      .uploadFile({
+        Bucket: bucketName,
+        Region: regionName,
+        Key: Date.now() + '.jpg',
+        FilePath: file.tempFilePath,
+        FileSize: file.size,
+      })
+      .then((res) =&gt; {
+        data.value = res.Location
+      })
+      .catch(() =&gt; {
+        error.value = true
+      })
+      .finally(() =&gt; {
+        loading.value = false
+      })
+  })
+}
+
+</code></pre>
+<h2 id="参考链接">参考链接</h2>
+<p><a href="https://cloud.tencent.com/document/product/436/109370">上传对象实践教程</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[node18在Centos7安装]]></title>
+        <id>https://blog.hbisedm.de5.net/post/node18-zai-centos7-an-zhuang/</id>
+        <link href="https://blog.hbisedm.de5.net/post/node18-zai-centos7-an-zhuang/">
+        </link>
+        <updated>2025-01-09T09:27:00.000Z</updated>
+        <content type="html"><![CDATA[<p>一开始不知道这个限制，捣鼓了很久，记录一下</p>
+<p>从nodejs18开始就不支持Centos7了，这是因为centos7的gilbc版本比较低，因此需要安装非官方构建的版本。</p>
+<p>三个方案来解决这个问题：</p>
+<ul>
+<li>从源代码安装 Node。这将允许您重新编译</li>
+<li>安装操作系统可支持的旧版本 Node</li>
+<li>将你的 Linux 操作系统升级到更新的版本。</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/74698021/installing-node-lib64-libm-so-6-version-glibc-2-27-not-found-required-by-n">Installing node: /lib64/libm.so.6: version `GLIBC_2.27' not found (required by node) error on linux</a></li>
+</ul>
+]]></content>
+    </entry>
+</feed>

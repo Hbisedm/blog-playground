@@ -1,0 +1,363 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jenkins构建前端项目与部署 | hbisedm&#39;s Blog</title>
+<link rel="shortcut icon" href="https://blog.hbisedm.de5.net/favicon.ico?v=1767951604023">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://blog.hbisedm.de5.net/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Jenkins构建前端项目与部署 | hbisedm&#39;s Blog - Atom Feed" href="https://blog.hbisedm.de5.net/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前提
+docker里面安装nginx/openresty服务器
+里面挂载宿主机一个目录 用于 服务器资源文件的修改
+docker里面安装jenkins
+
+本文是用1panel去操作容器， 当然用docker命令去操作也可，一个道理
+
+安装
+..." />
+    <meta name="keywords" content="Linux,工具" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://blog.hbisedm.de5.net">
+  <img class="avatar" src="https://blog.hbisedm.de5.net/images/avatar.png?v=1767951604023" alt="">
+  </a>
+  <h1 class="site-title">
+    hbisedm&#39;s Blog
+  </h1>
+  <p class="site-description">
+    <b>知其然更知其所以然</b>
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/hbisedm" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://x.com/HbisedmCloud" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Jenkins构建前端项目与部署
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-12-28
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://blog.hbisedm.de5.net/tag/Gip7PKmA7w/" class="post-tag">
+                  # Linux
+                </a>
+              
+                <a href="https://blog.hbisedm.de5.net/tag/_ifzxtuNlg/" class="post-tag">
+                  # 工具
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="前提">前提</h2>
+<p>docker里面安装nginx/openresty服务器<br>
+里面挂载宿主机一个目录 用于 服务器资源文件的修改<br>
+docker里面安装jenkins</p>
+<blockquote>
+<p>本文是用<code>1panel</code>去操作容器， 当然用docker命令去操作也可，一个道理</p>
+</blockquote>
+<h2 id="安装">安装</h2>
+<p>创建jenkins目录</p>
+<pre><code class="language-bash">mkdir -p /home/jenkins
+</code></pre>
+<p>新增jenkins网络</p>
+<pre><code class="language-bash">    docker network create jenkins_net
+</code></pre>
+<p>使用docker-compose安装jenkins</p>
+<pre><code class="language-yml">services:
+  xxx_jenkins:
+    image: jenkins/jenkins
+    container_name: xxx_jenkins
+    user: root
+    networks:
+      - jenkins_net
+    ports:
+      - 8990:8080
+      - 50000:50000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/jenkins/jenkins_home:/var/jenkins_home
+networks:
+  jenkins_net:
+</code></pre>
+<blockquote>
+<p><code>volumes</code>: 挂载宿主机的目录或文件到容器中。在这个例子中，宿主机的 <code>/var/run/docker.sock</code> 文件被挂载到容器的同一位置，宿主机的 <code>/home/jenkins/jenkins_home</code> 目录被挂载到容器的 <code>/var/jenkins_home</code> 目录。</p>
+</blockquote>
+<p>使用 docker compose 启动 Jenkins</p>
+<pre><code class="language-bash">docker compose up -d
+</code></pre>
+<pre><code class="language-bash">[root@localhost jenkins]# docker ps -a
+CONTAINER ID   IMAGE                                 COMMAND                   CREATED        STATUS                      PORTS                                                                                                                                                                                                                    NAMES
+7f01e9c84eed   jenkins/jenkins                       &quot;/usr/bin/tini -- /u…&quot;   6 days ago     Up 46 hours                 0.0.0.0:50000-&gt;50000/tcp, :::50000-&gt;50000/tcp, 0.0.0.0:8990-&gt;8080/tcp, :::8990-&gt;8080/tcp                                                                                                                                 jhl_jenkins
+</code></pre>
+<h2 id="开始操作jenkins">开始操作jenkins</h2>
+<p>上面是我将宿主机的8990映射到容器内的8080，所以需要对端口为8990放行</p>
+<figure data-type="image" tabindex="1"><img src="https://img.4837.cloud/upload/202501/677642df9e91a4.22015476.png" alt="放行端口号" loading="lazy"></figure>
+<p>第一次进入需要获取密码</p>
+<pre><code class="language-bash">cat /var/jenkins_home/secrets/initialAdminPassword
+</code></pre>
+<ul>
+<li>登录后，选择<strong>自定义 Jenkins - 选择插件来安装</strong></li>
+<li>进去后 - 点击 无 - 滚动到底部 - **选择Localization: Chinese (Simplified) **- 安装</li>
+<li>只安装一个插件 Localization: Chinese (Simplified)</li>
+<li>其他按默认一直下一步就行</li>
+</ul>
+<h2 id="配置插件源">配置插件源</h2>
+<p>Dashboard -&gt; 系统管理 -&gt; 插件管理 -&gt; Advanced setting -&gt; 配置镜像源</p>
+<p>修改为：<code>https://updates.jenkins.io/update-center.json</code></p>
+<p>修改后，需要重启Jenkins</p>
+<figure data-type="image" tabindex="2"><img src="https://img.4837.cloud/upload/202501/67764543c3cba2.25768036.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://img.4837.cloud/upload/202501/6776456030a135.37985032.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>但是这样操作的话， 还是下载不了插件，设置全局配置加入网络代理</p>
+</blockquote>
+<figure data-type="image" tabindex="4"><img src="https://img.4837.cloud/upload/202501/677648fbb9cd28.44605933.png" alt="" loading="lazy"></figure>
+<h2 id="远程触发构建">远程触发构建</h2>
+<p>Jenkins 官网 - 跨站请求伪造保护：https://www.jenkins.io/doc/book/security/csrf-protection/</p>
+<p>Jenkins 远程触发 403 No valid crumb was included in the request https://www.jianshu.com/p/00fcfa4a53b5</p>
+<p>系统管理 - 脚本命令行</p>
+<p>输入下面脚本 - 点击运行</p>
+<pre><code class="language-yml">hudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION = true
+</code></pre>
+<p>勾选-匿名用户具有可读写权限</p>
+<figure data-type="image" tabindex="5"><img src="https://img.4837.cloud/upload/202501/67764a23ee2724.49527320.png" alt="" loading="lazy"></figure>
+<p>配置-触发远程构建</p>
+<figure data-type="image" tabindex="6"><img src="https://img.4837.cloud/upload/202501/67764a711ff6d5.12658035.png" alt="" loading="lazy"></figure>
+<p>比如我的就是 http://192.168.8.196:8990/job/factoryPc195/build?token=0b5d34cbe2a30ce849426ef395565373</p>
+<figure data-type="image" tabindex="7"><img src="https://img.4837.cloud/upload/202501/67764ae4395a82.14011199.png" alt="" loading="lazy"></figure>
+<h2 id="jenkins拉取远程代码-构建任务打包前端资源文件">Jenkins拉取远程代码-构建任务（打包前端资源文件）</h2>
+<p>那么需要安装git，node插件</p>
+<p>Git: https://plugins.jenkins.io/git/<br>
+nodejs: https://plugins.jenkins.io/nodejs/</p>
+<p>创建任务</p>
+<figure data-type="image" tabindex="8"><img src="https://img.4837.cloud/upload/202501/67764ba43ce979.22771216.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://img.4837.cloud/upload/202501/67764bceb5aed5.24378784.png" alt="" loading="lazy"></figure>
+<p>对于私有仓库需要个凭证才能拉取项目，填写对应信息</p>
+<figure data-type="image" tabindex="10"><img src="https://img.4837.cloud/upload/202501/67764c39d0a512.76787276.png" alt="" loading="lazy"></figure>
+<p>拉取前端项目后，需要运行<code>npm run build</code> 这就需要node环境</p>
+<p>配置node：</p>
+<figure data-type="image" tabindex="11"><img src="https://img.4837.cloud/upload/202501/67764cb6a1cd41.86598310.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://img.4837.cloud/upload/202501/67764cfae49547.85626104.png" alt="" loading="lazy"></figure>
+<p>Jenkins 任务 - 配置 Node.js 环境</p>
+<figure data-type="image" tabindex="13"><img src="https://img.4837.cloud/upload/202501/67764d6371f3a7.39210173.png" alt="" loading="lazy"></figure>
+<p>测试 nodejs 环境是否生效</p>
+<figure data-type="image" tabindex="14"><img src="https://img.4837.cloud/upload/202501/67764d9009ca94.83797284.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://img.4837.cloud/upload/202501/67764dad15f225.54556389.png" alt="" loading="lazy"></figure>
+<p>点击构建，查看控制台输出</p>
+<figure data-type="image" tabindex="16"><img src="https://img.4837.cloud/upload/202501/67764dd5b54516.75679666.png" alt="" loading="lazy"></figure>
+<p>拉取一个前端项目（vue、react都可）</p>
+<p>运行一个package.json里的script构建命令，假设为<code>build</code> ，会得到一个打包文件夹，假设为<code>dist</code></p>
+<pre><code class="language-bash">npm run build
+#  使用 tar 命令压缩 ./dist 目录
+tar zcvf dist.tar.gz ./dist
+</code></pre>
+<h2 id="将打包好的文件夹丢到远程服务器">将打包好的文件夹丢到远程服务器</h2>
+<p>思路：</p>
+<p>由于我的资源文件是放在当前容器的宿主机的nginx服务<br>
+那么我需要将这个容器和宿主机打通文件传输<br>
+使用ssh连接我的宿主机<br>
+接着使用scp将dist.tar.gz丢到宿主机的指定目录</p>
+<p><strong>公钥放在远程服务器，并命名为 authorized_keys， 私钥在jenkins服务器内。</strong></p>
+<pre><code class="language-bash">cat id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre>
+<p>这样jenkins服务器内输入 ssh 、scp 等链接远程服务器后，无需密码即可操作。</p>
+<p>操作：</p>
+<pre><code class="language-bash"># 进入jenkins
+docker exec -it &lt;jenkins容器id&gt; /bin/bash 
+
+# 在本地机器上生成密钥对
+ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;
+
+# 将公钥复制到服务器(宿主机)
+# 替换 username 为服务器的用户名，server_ip 为服务器的 IP 地址。
+# 系统会提示输入服务器的密码，公钥将自动添加到服务器的 ~/.ssh/authorized_keys 文件中。
+ssh-copy-id username@server_ip
+
+# 测试 SSH 密钥登录
+# 如果配置正确，应该无需输入密码即可登录（若设置了密码短语，则需输入短语）。
+ssh username@server_ip
+
+</code></pre>
+<p>jenkins 安装 ssh-agent 插件</p>
+<figure data-type="image" tabindex="17"><img src="https://img.4837.cloud/upload/202501/6776528e511a26.83169673.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://img.4837.cloud/upload/202501/67765313b3dba9.06465003.png" alt="" loading="lazy"></figure>
+<p>配置执行shell</p>
+<pre><code class="language-bash">node -v
+npm -v
+npm config set registry https://registry.npmmirror.com
+npm i
+
+npm run build
+
+ls
+tar zcvf dist.tar.gz ./pc-dist
+ls
+
+# 启动ssh-agent，这个代理会管理SSH私钥，用于无密码登录
+eval $(ssh-agent -s)
+
+
+scp dist.tar.gz root@192.168.8.196:/home/1panel/apps/openresty/openresty/www/sites/xxx
+
+ssh -v root@192.168.8.196 &quot;cd /home/1panel/apps/openresty/openresty/www/sites/xxx; rm -rf index; mkdir index; tar zxvf dist.tar.gz; mv ./pc-dist/* ./index/; rm -rf ./pc-dist; exit&quot;
+
+# 结束 ssh-agent 会话
+ssh-agent -k
+
+</code></pre>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://hostalk.net/posts/linux_sshkey.html">服务器配置SSH密钥登陆</a></li>
+<li><a href="https://cloud.tencent.com/developer/information/%E4%BD%BF%E7%94%A8cURL%E5%91%BD%E4%BB%A4%E8%A7%A6%E5%8F%91%E6%88%91%E7%9A%84Jenkins%E6%9E%84%E5%BB%BA%E4%BD%9C%E4%B8%9A">使用cURL命令触发我的Jenkins构建作业</a></li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%89%8D%E6%8F%90">前提</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+<li><a href="#%E5%BC%80%E5%A7%8B%E6%93%8D%E4%BD%9Cjenkins">开始操作jenkins</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%8F%92%E4%BB%B6%E6%BA%90">配置插件源</a></li>
+<li><a href="#%E8%BF%9C%E7%A8%8B%E8%A7%A6%E5%8F%91%E6%9E%84%E5%BB%BA">远程触发构建</a></li>
+<li><a href="#jenkins%E6%8B%89%E5%8F%96%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81-%E6%9E%84%E5%BB%BA%E4%BB%BB%E5%8A%A1%E6%89%93%E5%8C%85%E5%89%8D%E7%AB%AF%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6">Jenkins拉取远程代码-构建任务（打包前端资源文件）</a></li>
+<li><a href="#%E5%B0%86%E6%89%93%E5%8C%85%E5%A5%BD%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%A2%E5%88%B0%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8">将打包好的文件夹丢到远程服务器</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://blog.hbisedm.de5.net/post/gong-ju-cha-jian/">
+              <h3 class="post-title">
+                工具、插件、网站
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://blog.hbisedm.de5.net/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

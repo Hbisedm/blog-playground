@@ -1,0 +1,206 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cursor | hbisedm&#39;s Blog</title>
+<link rel="shortcut icon" href="https://blog.hbisedm.de5.net/favicon.ico?v=1767951604023">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://blog.hbisedm.de5.net/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Cursor | hbisedm&#39;s Blog - Atom Feed" href="https://blog.hbisedm.de5.net/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="使用一个2925邮箱进行注册
+原理
+123456@2925.com ，123456+1@2925.com 对于cursor注册时，是不同的邮箱， 但是收验证码时，是同一个邮箱123456@2925.com在接收
+同一个邮箱的Trial版本使..." />
+    <meta name="keywords" content="工具" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://blog.hbisedm.de5.net">
+  <img class="avatar" src="https://blog.hbisedm.de5.net/images/avatar.png?v=1767951604023" alt="">
+  </a>
+  <h1 class="site-title">
+    hbisedm&#39;s Blog
+  </h1>
+  <p class="site-description">
+    <b>知其然更知其所以然</b>
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/hbisedm" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://x.com/HbisedmCloud" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Cursor
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-12-25
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+                <a href="https://blog.hbisedm.de5.net/tag/_ifzxtuNlg/" class="post-tag">
+                  # 工具
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p><strong>使用一个2925邮箱进行注册</strong></p>
+<h2 id="原理">原理</h2>
+<p><code>123456@2925.com</code> ，<code>123456+1@2925.com</code> 对于cursor注册时，是不同的邮箱， 但是收验证码时，是同一个邮箱<code>123456@2925.com</code>在接收</p>
+<p>同一个邮箱的Trial版本使用过多，cursor会检测出来</p>
+<p>使用<a href="https://github.com/yuaotian/go-cursor-help">重置软件</a>进行重置即可</p>
+<h2 id="如果邮箱不够用">如果邮箱不够用：</h2>
+<p><strong>可使用cloudflare 绑定域名 去关联到 https://tempmail.plue</strong></p>
+<p>自定义邮箱，路由规则选项中的 Catch-All 打开，用于将所有邮件转发到同一地址 （tempmail）<br>
+将上面 cloudflare 自定义邮箱转发地址填写为你的随心所欲字符 @mailto.plus 这样 cloudflare 的部分就弄好了。</p>
+<p><a href="https://linux.do/t/topic/335823">参考</a></p>
+<h2 id="一个好用的rule网站">一个好用的rule网站</h2>
+<p>https://cursor.directory/</p>
+<h2 id="一站式使用教程">一站式使用教程</h2>
+<p>https://linux.do/t/topic/359608</p>
+<p>https://pool.ccursor.org/index.html</p>
+<p>https://poolhub.me/<br>
+https://linux.do/t/topic/534171</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86">原理</a></li>
+<li><a href="#%E5%A6%82%E6%9E%9C%E9%82%AE%E7%AE%B1%E4%B8%8D%E5%A4%9F%E7%94%A8">如果邮箱不够用：</a></li>
+<li><a href="#%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%94%A8%E7%9A%84rule%E7%BD%91%E7%AB%99">一个好用的rule网站</a></li>
+<li><a href="#%E4%B8%80%E7%AB%99%E5%BC%8F%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B">一站式使用教程</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://blog.hbisedm.de5.net/post/mei-tian-hua-shui-bi-guang-lun-tan/">
+              <h3 class="post-title">
+                技术论坛
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://blog.hbisedm.de5.net/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
